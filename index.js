@@ -23,7 +23,8 @@ if(typeof index !== 'undefined')
           // console.log(JSON.stringify(p));
 
           request({
-            uri: 'http://admin:opsone@localhost/manganext-wp/api/v1/posts',
+            uri: 'http://admin:opsone@localhost/manganext-wp/api/v2/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
+            // uri: 'http://madmin:L!nk1701@admin.manganext-app.com/api/v2/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
             method: 'POST',
             json: posts
           });
