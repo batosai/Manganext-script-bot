@@ -17,6 +17,11 @@ if(typeof index !== 'undefined')
       links.push('http://www.manga-news.com/index.php/planning?p_year=' + d.format('YYYY') + '&p_month=' + d.format('M'));
   };
 
+  // links.push('http://www.manga-news.com/index.php/planning?p_year=' + d.format('YYYY') + '&p_month=5');
+  // links.push('http://www.manga-news.com/index.php/planning?p_year=' + d.format('YYYY') + '&p_month=6');
+  // links.push('http://www.manga-news.com/index.php/planning?p_year=' + d.format('YYYY') + '&p_month=7');
+
+
   c.listing(links[index], function(){
       c.extracts(function(p){
           posts = p;

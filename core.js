@@ -13,7 +13,7 @@ var parse = function(scope)
     var text  = scope.text();
     text      = text.replace(title, '').trim();
     text      = text.substring(1).trim();// remove caract ':'
-    text = text.replace( /\s\s+/g, ' ' );// remove multi space
+    text      = text.replace( /\s\s+/g, ' ' );// remove multi space
 
     return text.replace(title, '').trim();
 };
@@ -91,6 +91,12 @@ module.exports = function()
             p.editor               = parse_link($, $('#topinfo').find("li:contains('Editeur VF')"));
             p.vo_editor            = parse($('#topinfo').find("li:contains('Editeur VO')"));
             p.preprint             = parse($('#topinfo').find("li:contains('Prépublication')"));
+            p.age_number           = $('#agenumber').find("a").text().trim();
+
+            var block = $($('#sidebar').html()).find('#numberblock');
+            if(block.find('a').length) block = block.find('a').removeAttr('href').removeAttr('title').parent().html().replace('<a>', '').replace('</a>', '');
+
+            p.outputs_number       = block;
 
             if($('#topinfo').find("li:contains('Date de publication')").length){
                 p.first_publication_at = moment( parse($('#topinfo').find("li:contains('Date de publication')")), "Do MMMM YYYY", 'fr').format();
@@ -127,4 +133,3 @@ module.exports = function()
         });
     };
 };
-

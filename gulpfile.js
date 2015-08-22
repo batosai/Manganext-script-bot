@@ -10,7 +10,7 @@ gulp.task('deploy-prod', [], function(){
     return gulp.src('./')
       .pipe(rsync({
         root: './',
-        hostname: 'server.chaufourier.fr',
+        hostname: 'api.manganext-app.com',
         username: 'peter',
         destination: '/home/peter/scripts/manganext-bot',
         recursive: true,
