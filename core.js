@@ -98,8 +98,9 @@ module.exports = function()
 
             p.outputs_number       = block;
 
-            if($('#topinfo').find("li:contains('Date de publication')").length){
-                p.first_publication_at = moment( parse($('#topinfo').find("li:contains('Date de publication')")), "Do MMMM YYYY", 'fr').format();
+            if($('#topinfo').find("li:contains('Date de publication') meta").length){
+                // p.first_publication_at = moment( parse($('#topinfo').find("li:contains('Date de publication')")), "Do MMMM YYYY", 'fr').format();
+                p.first_publication_at = moment( $('#topinfo').find("li:contains('Date de publication') meta").attr('content'), "YYYY-MM-DD", 'fr').format();
             }
 
             if($('#topinfo').find("li:contains('Date de publication 2')").length){
