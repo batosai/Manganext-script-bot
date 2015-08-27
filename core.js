@@ -27,6 +27,11 @@ var parse_link = function($, scope)
     return link.join();
 };
 
+var date_fr = function(value){
+  value = value.toLowerCase();
+  return value.replace('fevrier', 'février').replace('aout', 'août').replace('decembre', 'décembre');
+};
+
 module.exports = function()
 {
     this.urls  = [];
@@ -94,7 +99,18 @@ module.exports = function()
             p.age_number           = $('#agenumber').find("a").text().trim();
 
             var block = $($('#sidebar').html()).find('#numberblock');
-            if(block.find('a').length) block = block.find('a').removeAttr('href').removeAttr('title').parent().html().replace('<a>', '').replace('</a>', '');
+            if(block.find('a').length) {
+              block = block.find('a').removeAttr('href').removeAttr('title').parent().html().replace('<a>', '').replace('</a>', '');
+            }
+            else {
+                block = block.html();
+            }
+
+
+            if(block != '') {
+              block = block.replace(/(\r\n|\n|\r)/gm,"");
+              block = block.replace(/ +(?= )/g, '');
+            }
 
             p.outputs_number       = block;
 
@@ -104,7 +120,7 @@ module.exports = function()
             }
 
             if($('#topinfo').find("li:contains('Date de publication 2')").length){
-                p.publication_at   = moment( parse($('#topinfo').find("li:contains('Date de publication 2')")), "Do MMMM YYYY", 'fr').format();
+                p.publication_at   = moment( date_fr(parse($('#topinfo').find("li:contains('Date de publication 2')"))), "Do MMMM YYYY", 'fr').format();
             }
             else if(p.first_publication_at) {
                 p.publication_at = p.first_publication_at;

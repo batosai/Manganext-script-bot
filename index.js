@@ -21,7 +21,7 @@ if(typeof index !== 'undefined')
   // links.push('http://www.manga-news.com/index.php/planning?p_year=2015&p_month=6');
   // links.push('http://www.manga-news.com/index.php/planning?p_year=2015&p_month=7');
 
-  // c.extract('http://www.manga-news.com/index.php/manga/XXX-Holic/vol-8', function(){});
+  // c.extract('http://www.manga-news.com/index.php/manga/Inazuma-Eleven-GO-Roman/vol-8', function(){});
 
   c.listing(links[index], function(){
       c.extracts(function(p){
@@ -29,8 +29,8 @@ if(typeof index !== 'undefined')
           // console.log(JSON.stringify(p));
 
           request({
-            uri: 'http://admin:opsone@localhost/manganext-wp/api/v2/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
-            // uri: 'http://madmin:L!nk1701@api.manganext-app.com/api/v2/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
+            // uri: 'http://admin:opsone@localhost/manganext-wp/api/v2/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
+            uri: 'http://madmin:L!nk1701@api.manganext-app.com/api/v2/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
             method: 'POST',
             json: posts
           });
