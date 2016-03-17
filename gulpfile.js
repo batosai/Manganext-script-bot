@@ -12,7 +12,7 @@ gulp.task('deploy-prod', [], function(){
         root: './',
         hostname: 'api.manganext-app.com',
         username: 'peter',
-        destination: '/home/peter/scripts/manganext-bot',
+        destination: '/home/scripts/manganext-bot',
         recursive: true,
         emptyDirectories: true,
         incremental: true,

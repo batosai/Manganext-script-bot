@@ -1,10 +1,9 @@
 'use strict';
 
 var jsdom  = require("jsdom");
-// var post   = require("./post.js");
 var fs     = require("fs");
 var jquery = fs.readFileSync("./node_modules/jquery/dist/jquery.js", "utf-8");
-// var jquery = fs.readFileSync("/home/peter/scripts/manganext-bot/node_modules/jquery/dist/jquery.js", "utf-8");
+// var jquery = fs.readFileSync("/home/scripts/manganext-bot/node_modules/jquery/dist/jquery.js", "utf-8");
 var moment = require("moment");
 
 var parse = function(scope)
