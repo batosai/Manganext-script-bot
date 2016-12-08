@@ -1,41 +1,97 @@
-'use strict';
+const express    = require('express');
+const connection = require('./config').db;
+const baseUrl    = require('./config').baseUrl;
 
-var core    = require("./core.js");
-var moment  = require("moment");
-var request = require('request');
+const app        = express();
+const port       = process.env.PORT || 3000;
+const router     = express.Router();
 
-var index = process.argv[2];
+// http://api.manganext-app.com/api/v2.1/posts/:id?token=ea5af636cd2c0c07242ee43c07cbefb3&order=DESC&per_page=10&offset=0&list=now&s=''
 
-if(typeof index !== 'undefined')
-{
-  var links = [];
-  var posts = [];
-  var c     = new core();
-
-  for (var i = 0; i < 6; i++) {
-      var d = moment().add(i, 'months');
-      links.push('http://www.manga-news.com/index.php/planning?p_year=' + d.format('YYYY') + '&p_month=' + d.format('M'));
-  };
-
-  // links.push('http://www.manga-news.com/index.php/planning?p_year=2015&p_month=5');
-  // links.push('http://www.manga-news.com/index.php/planning?p_year=2015&p_month=6');
-  // links.push('http://www.manga-news.com/index.php/planning?p_year=2015&p_month=7');
-
-  // c.extract('http://www.manga-news.com/index.php/manga/Inazuma-Eleven-GO-Roman/vol-8', function(){});
-
-  c.listing(links[index], function(){
-      c.extracts(function(p){
-          posts = p;
-          // console.log(JSON.stringify(p));
-
-          request({
-            // uri: 'http://admin:opsone@localhost/manganext-wp/api/v21/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
-            uri: 'http://madmin:L!nk1701@api.manganext-app.com/api/v21/posts?token=ea5af636cd2c0c07242ee43c07cbefb3',
-            method: 'POST',
-            json: posts
-          });
-
-      }); // extracts posts
-  }); // listing urls for links[index]
-
+function media(row) {
+  row.image = row.source_url = null
+  row.media = { size: [
+    {
+      height: '625',
+      width: '450',
+      name: 'thumbnail-450x625',
+      url: `${baseUrl}${row.image_path}/full/${row.image_name}`,
+    },
+    {
+      height: '300',
+      width: '215',
+      name: 'thumbnail-215x300',
+      url: `${baseUrl}${row.image_path}/215/${row.image_name}`,
+    },
+  ]};
+  return row;
 }
+
+
+router.get('/posts', (req, res) => {
+
+  if(!req.query.token || req.query.token !== 'ea5af636cd2c0c07242ee43c07cbefb3') {
+    res.status(500).send('Access denied');
+  }
+
+  const order = req.query.order ? req.query.order : 'DESC';
+  const per_page = req.query.per_page ? parseInt(req.query.per_page) : 10;
+  const offset = req.query.offset ? parseInt(req.query.offset) : 0;
+  const list = req.query.list ? req.query.list : 'now';
+  const search = req.query.s ? ` AND (
+    title LIKE '%${req.query.s}%' OR
+    vo_title LIKE '%${req.query.s}%' OR
+    content LIKE '%${req.query.s}%' OR
+    translate_title LIKE '%${req.query.s}%' OR
+    designer LIKE '%${req.query.s}%' OR
+    author LIKE '%${req.query.s}%' OR
+    collection LIKE '%${req.query.s}%' OR
+    editor LIKE '%${req.query.s}%' OR
+    vo_editor LIKE '%${req.query.s}%'
+  )` : '';
+
+
+  const d = new Date().toLocaleString();
+  const where = list === 'now' ? `publication_at < '${d}'` : `publication_at > '${d}'`;
+
+  connection.query(`SELECT * FROM books WHERE ${where} ${search} ORDER BY publication_at ${order} LIMIT ?,?`, [offset, per_page], (err, rows, fields) => {
+    if(rows && rows.length) {
+
+      rows = rows.map(row => media(row));
+
+      res.json({ posts: rows });
+    }
+    else {
+      res.json({ posts: [] });
+    }
+  });
+});
+
+router.get('/posts/:id', (req, res) => {
+  if(!req.query.token || req.query.token !== 'ea5af636cd2c0c07242ee43c07cbefb3') {
+    res.status(500).send('Access denied');
+  }
+
+  connection.query('SELECT * FROM books WHERE id=? LIMIT 1', [req.params.id], (err, row, fields) => {
+    if(row && row.length) {
+      row = media(row[0]);
+      res.json(row);
+    }
+    else {
+      res.json({});
+    }
+  });
+});
+
+router.get('/posts/:id/comments', (req, res) => {
+  res.json([]);
+});
+
+router.post('/comments', (req, res) => {
+  res.json([]);
+});
+
+app.use('/api/v2.1', router);
+app.use(express.static('public'));
+
+app.listen(port);

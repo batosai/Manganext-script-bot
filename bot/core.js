@@ -1,24 +1,24 @@
 'use strict';
 
-var jsdom  = require("jsdom");
-var fs     = require("fs");
-var jquery = fs.readFileSync("./node_modules/jquery/dist/jquery.js", "utf-8");
+const jsdom  = require("jsdom");
+const fs     = require("fs");
+const jquery = fs.readFileSync("./node_modules/jquery/dist/jquery.js", "utf-8");
 // var jquery = fs.readFileSync("/home/scripts/manganext-bot/node_modules/jquery/dist/jquery.js", "utf-8");
-var moment = require("moment");
+const moment = require("moment");
 
-var parse = function(scope)
+const parse = function(scope)
 {
-    var title = scope.find('strong').text();
-    var text  = scope.text();
+    const title = scope.find('strong').text();
+    let text  = scope.text();
     text      = text.replace(title, '').trim();
     text      = text.substring(1).trim();// remove caract ':'
     text      = text.replace( /\s\s+/g, ' ' );// remove multi space
 
     return text.replace(title, '').trim();
 };
-var parse_link = function($, scope)
+const parse_link = function($, scope)
 {
-    var link = [];
+    let link = [];
     scope.find('a').each(function() {
         link.push($(this).text().trim());
     });
@@ -26,7 +26,7 @@ var parse_link = function($, scope)
     return link.join();
 };
 
-var date_fr = function(value){
+const date_fr = function(value){
   value = value.toLowerCase();
   return value.replace('fevrier', 'février').replace('aout', 'août').replace('decembre', 'décembre');
 };
@@ -38,16 +38,16 @@ module.exports = function()
 
     this.listing = function(url, callback)
     {
-        var self = this;
+        const self = this;
         jsdom.env({
           url: url,
           // scripts: ["http://code.jquery.com/jquery.js"],
           src: [jquery],
-          done: function (errors, window) {
-            var $ = window.$;
+          done: (errors, window) => {
+            const $ = window.$;
 
             $("#planning tr").each(function() {
-                var href = $(this).find('td:nth-child(2) a').attr('href');
+                const href = $(this).find('td:nth-child(2) a').attr('href');
 
                 if(href) {
                     self.urls.push(href);
@@ -63,21 +63,21 @@ module.exports = function()
     {
         this.urls.reverse();
 
-        var url = this.urls[this.urls.length-1];
+        const url = this.urls[this.urls.length-1];
         this.urls.pop();
         this.extract(url, callback);
     };
 
     this.extract = function(uri, callback)
     {
-        var self = this;
+        const self = this;
         jsdom.env({
           url: uri,
           src: [jquery],
-          done: function (errors, window) {
-            var $     = window.$;
+          done: (errors, window) => {
+            const $     = window.$;
             // var p     = new post();
-            var p     = {};
+            let p     = {};
 
             p.title                = $('h1 > a').text();
 
@@ -97,7 +97,7 @@ module.exports = function()
             p.preprint             = parse($('#topinfo').find("li:contains('Prépublication')"));
             p.age_number           = $('#agenumber').find("a").text().trim();
 
-            var block = $($('#sidebar').html()).find('#numberblock');
+            let block = $($('#sidebar').html()).find('#numberblock');
             if(block.find('a').length) {
               block = block.find('a').removeAttr('href').removeAttr('title').parent().html().replace('<a>', '').replace('</a>', '');
             }
@@ -138,7 +138,7 @@ module.exports = function()
 
             if(self.urls.length)
             {
-                var url = self.urls[self.urls.length-1];
+                const url = self.urls[self.urls.length-1];
                 self.urls.pop();
                 self.extract(url, callback);
             }
