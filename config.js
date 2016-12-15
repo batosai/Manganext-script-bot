@@ -8,3 +8,6 @@ module.exports = {
   }),
   baseUrl : 'http://localhost:3000'
 };
+
+// scp -r api root@163.172.132.179:~/manganext
+// sudo systemctl start nginx

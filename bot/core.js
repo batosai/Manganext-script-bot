@@ -86,6 +86,7 @@ module.exports = function()
 
             p.vo_title             = parse($('#topinfo').find("li:contains('Titre VO')"));
             p.content              = $('#summary').find('p:first').text();
+            p.content_display      = $('#summary').find('p:first').html();
             p.translate_title      = parse($('#topinfo').find("li:contains('Titre traduit')"));
             p.designer             = parse($('#topinfo').find("li:contains('Dessin')"));
             p.author               = parse($('#topinfo').find("li:contains('Scénario')"));
