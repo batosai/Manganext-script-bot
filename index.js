@@ -13,7 +13,6 @@ app.use(express.static('public'));
 app.listen(port);
 
 // cron
-
 new cronJob('0 * 2 * * *', function() {
   bot(0);
 }, null, true);

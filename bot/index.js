@@ -91,13 +91,13 @@ module.exports = function(index){
                                   console.log('done');
                                   post.image_name = image;
                                   post.image_path = download.replace('./public', '');
-                                  post.updated_at = new Date().toLocaleString();
+                                  post.updated_at = moment().format();
 
                                   if(rows.length) {
                                     connection.query("UPDATE books SET ? WHERE ean=?", [post, post.ean]);
                                   }
                                   else {
-                                    post.created_at = new Date().toLocaleString();
+                                    post.created_at = moment().format();
                                     connection.query('INSERT INTO books SET ?', post);
                                   }
                                 }
